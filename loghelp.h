@@ -39,6 +39,10 @@ struct Log_Char_Traits {
 
 template<typename LevelT, class Char = char>
 struct Log_Traits : public Log_Char_Traits<Char> {
+	typedef typename Log_Char_Traits<Char>::InCharT InCharT;
+	typedef typename Log_Char_Traits<Char>::OutCharT OutCharT;
+	typedef typename Log_Char_Traits<Char>::InStream InStream;
+	typedef typename Log_Char_Traits<Char>::OutStream OutStream;
 	typedef typename LevelT::LevelEnum	LevelE;
 };
 

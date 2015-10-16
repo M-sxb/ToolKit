@@ -22,11 +22,12 @@
 #define Newer_Head
 
 
-namespace {
-	
 #include <sstream>
 #include <string>
 #include "log.h"
+
+
+namespace {
 
 template<class CharT> 
 std::basic_string<CharT> TrackNewCount_Str(int type, long count, void* ptr, size_t size) {
@@ -106,9 +107,6 @@ void TrackNewCount(int type, void* ptr, size_t size = 0) {
 }
 
 } // namespace
-
-
-#include <iostream>
 
 /** Newer is a test class for memory leck.
 	@todo 
