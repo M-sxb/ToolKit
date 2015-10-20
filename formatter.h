@@ -1,7 +1,7 @@
 // this file is under no license.
 /** @file formatter.h
 	@brief formatter classes.
-	@date 10-7-2015 
+	@date 
 	@version
 	@authors
 	@attention This file is still under modification.
@@ -16,94 +16,9 @@
 #ifndef Formatter_Head
 #define Formatter_Head
 
-namespace type { 
-
-namespace details {
-	struct true_ {};
-	struct false_ {};
-} // namespace details
-
-// is plain old data
-template<typename T>
-struct IsPOD { enum {value = false}; typedef details::false_ type;};
-
-#define IS_POD(t) 				template<> struct IsPOD<t> { enum {value = true}; typedef details::true_ type;}; 
-#define IS_POD_E(extra,type) 	IS_POD(type) \
- 								IS_POD(extra type)
-// char
-IS_POD_E(unsigned, char)
-// short
-IS_POD_E(unsigned, short)
-// int
-IS_POD_E(unsigned, int)
-// long
-IS_POD_E(unsigned, long)
-// long long, vc 6.0 not support.
-IS_POD_E(unsigned, long long)
-// float
-IS_POD(float)
-// double
-IS_POD(double)
-// long double
-IS_POD(long double)
+#include <string>
 
 /*
-template<typename B, typename T>
-struct ParamTypeImp { typedef typename ParamTypeImp<B::value, T>::type type;};
-
-template<typename T>
-struct ParamTypeImp<bool, T> { typedef T type;};
-template<typename T>
-struct ParamTypeImp<false, T> { typedef T const& type;};
-template<typename T>
-struct ParamTypeImp<false, T&> { typedef T const& type;};
-*/
-
-
-template<typename Bool, typename Type>
-struct ParamTypeImp { 
-	template<typename B, typename T>
-	struct apply {
-		typedef T type;
-	};
-
-	template<typename T>
-	struct apply<details::false_, T> {
-		typedef T const& type;
-	};
-
-	template<typename T>
-	struct apply<details::false_, T&> {
-		typedef T const& type;
-	};
-
-	typedef typename apply<typename Bool::type, Type>::type type;
-};
-
-template<typename T>
-struct ParamType : public ParamTypeImp<IsPOD<T>, T> {};
-
-} // namespace type
-
-/* 
-// vc 6.0 ok
-template<bool>
-struct Boolean { enum { value = true}};
-template<>
-struct Boolean<false> { enum { value = false}};
-
-// vc 6.0 failed
-template<bool, typename T>
-struct ParamTypeImp { typedef T type;};
-template<typename T>
-struct ParamTypeImp<false, T> { typedef T const& type;};
-template<typename T>
-struct ParamTypeImp<false, T&> { typedef T const& type;};
-
-template<typename T>
-struct ParamType : public ParamTypeImp<IsPOD<T>::value, T> {};
-*/
-
 template<typename Info, typename Out>
 struct Formatter {
 	typedef typename ParamType<Info>::type InfoParam;
@@ -132,6 +47,59 @@ class AggregateFormatter : public Formatter<Info, Out> {
 public:
 	std::vector<std::share_ptr<Formatter<Info, Out> > > vformater_;
 };
+*/
+struct LogPointInfo { 
+	virtual ~LogPointInfo() {}
+};
+
+#define CLONE_IMP(base, derived) 	virtual base* clone() const { \
+										derived* ptr = new derived(*this); \
+										return ptr; \
+									}
+
+struct Formatter { 
+	virtual ~Formatter() {}
+
+	/** clone this Formatter.
+		@return this Formatter.
+	*/
+	virtual Formatter* clone() const = 0;
+
+	/** add format string to output string.
+		@param[in] info info class.
+		@param[out] out output string.
+		@retval true formated.
+		@retval fasle not formated, or failed.
+	*/
+	virtual bool format(const LogPointInfo& info, std::string& out) const = 0;
+};
+
+struct PadFormatter : public Formatter { 
+	PadFormatter(size_t n = 0, char pad = ' ') : n_(n), pad_(pad) {}
+
+	void setData(size_t n, char pad = ' ') { n_ = n; pad_ = pad;}
+
+	CLONE_IMP(Formatter, PadFormatter)
+
+	virtual bool format(const LogPointInfo& info, std::string& out) const { 
+		size_t n = n_;
+		while(n--) { 
+			out += pad_;
+		}
+		return true;
+	}
+
+	size_t n_;
+	char pad_;
+};
+
+class FormatBuilder { 
+	virtual ~FormatBuilder() {}
+	virtual bool handleFormatStr(const std::string& fstr, std::string& out) { 
+		
+	}
+};
+
 
 
 
