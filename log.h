@@ -172,6 +172,7 @@ public:
 		log(LevelT::Assert, msg);
 	}
 
+
 	void operator()(LevelE level, const InCharT* msg) {
 		log(level, msg);
 	}
