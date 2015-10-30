@@ -22,17 +22,22 @@
 	- add macros LOGIMP, LOG
 	- change LOG macros to LOGS macros, add defLog type, LOG macros
 	- VC6.0 basically OK.
+
+  	<b>10-31-2015</b> 
+	- using macro assert to test at /i assert member function.
+	- change member function /i assert to assert_. 
 */
 
 
 #ifndef Log_Head
 #define Log_Head
 
-
+#include <cassert>
 #include "config.h"
 #include "loghelp.h"
 #include "log_default_set.h"
 #include "SingletonWraper.h"
+
 
 // LogImp
 template<typename LevelT,
@@ -90,7 +95,7 @@ typedef cnslLog defLog;
 #define LOGIMP_INFO(logimp, msg)			logimp.info((msg));
 #define LOGIMP_WARN(logimp, msg)			logimp.warn((msg));
 #define LOGIMP_ERROR(logimp, msg)			logimp.error((msg));
-#define LOGIMP_ASSERT(logimp, b, msg)		logimp.assert(!(!(b)), (msg));
+#define LOGIMP_ASSERT(logimp, b, msg)		logimp.assert_(!(!(b)), (msg));
 
 
 // LOG singleton macros
@@ -101,7 +106,7 @@ typedef cnslLog defLog;
 #define LOGS_INFO(loger, msg)				LOGIMP_INFO(loger::instance(), msg);
 #define LOGS_WARN(loger, msg)				LOGIMP_WARN(loger::instance(), msg);
 #define LOGS_ERROR(loger, msg)				LOGIMP_ERROR(loger::instance(), msg);
-#define LOGS_ASSERT(loger, b, msg)			LOGIMP_ASSERT(loger::instance(), msg);
+#define LOGS_ASSERT(loger, b, msg)			LOGIMP_ASSERT(loger::instance(), b, msg);
 
 
 // LOG singleton macros
@@ -112,13 +117,14 @@ typedef cnslLog defLog;
 #define LOG_INFO(msg)				LOGS_INFO(defLog, msg);
 #define LOG_WARN(msg)				LOGS_WARN(defLog, msg);
 #define LOG_ERROR(msg)				LOGS_ERROR(defLog, msg);
-#define LOG_ASSERT(b, msg)			LOGS_ASSERT(defLog, msg);
+#define LOG_ASSERT(b, msg)			LOGS_ASSERT(defLog, b, msg);
 
 
 /**
 	@todo Work out the LogImp.
 	<em>LogLevel -> Formater -> Fileter</em> but now is : <em>LogLevel -> Fileter</em>
 	<em>InStream -> Formater -> OutStream -> Directer -> OutPut</em>
+	- member function assert_ need a better name.
 */
 template<typename LevelT,
 		 class CharT,
@@ -166,12 +172,11 @@ public:
 	void error(const InCharT* msg) {
 		log(LevelT::Error, msg);
 	}
-
-	void assert(bool isOk, const InCharT* msg) {
-		if(isOk) return ;
-		log(LevelT::Assert, msg);
+	
+	void assert_(bool isOk, const InCharT* msg) {
+		if(!isOk) log(LevelT::Assert, msg);
+		assert(isOk);
 	}
-
 
 	void operator()(LevelE level, const InCharT* msg) {
 		log(level, msg);

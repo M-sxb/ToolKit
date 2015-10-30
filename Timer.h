@@ -22,9 +22,10 @@
 #include <string> // std::basic_string<>
 #include <sstream> // 
 
+#include "log.h"   // put log.h file here for avoid assert definition conflict.
 #include "Clock.h" // Clock
 #include "Clocker.h" // Clocker
-#include "log.h"
+
 
 
 template<class CharT>
