@@ -127,6 +127,13 @@ struct Newer {
 		::operator delete(ptr);
 	}
 	
+	static void* operator new(size_t size, void* ptr) {
+		return ptr; // placement new.
+	}
+	
+	static void operator delete(void* ptr, void* ptr2) {
+		// do nothing in ``placement delete"
+	}
 //	static void operator delete(void* ptr, size_t size) {
 //		::operator delete(ptr);
 //	}
