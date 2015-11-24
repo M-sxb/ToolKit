@@ -24,6 +24,7 @@
 
 #include "UnitOfSelecter.h" // for UnitOfSelecter
 
+namespace timer {
 
 //! @todo ? better abstract class: UnitOf.
 struct UnitOfTime {
@@ -75,6 +76,8 @@ struct WinClock : public Clock_Traits<double,
 };
 
 #endif // WIN_PLATFORM
+
+} // namespace timer.
 
 
 #endif // Clock_Head

@@ -23,6 +23,8 @@
 #include <cassert>  // assert
 
 
+namespace timer {
+
 /**
 	template<typename Clock> class Clocker;
 	<b>template Clock </b>
@@ -32,10 +34,10 @@
 
 	@relatesalso Clock, Timer.
 */
-template<typename Clock> 
+template<typename C> 
 class Clocker { 
 public:
-	typedef typename Clock::TimesType 	TimesType;
+	typedef typename C::TimesType 	TimesType;
 	typedef double						RetTimesType;
 	typedef unsigned int 				RetCountType;
 
@@ -199,6 +201,8 @@ private:
 	RetCountType calledcounts;
 	TimesType tmptime;
 };
+
+} // namespace timer.
 
 
 #endif // Clocker_Head

@@ -204,11 +204,10 @@ public:
 	virtual bool output(Direction direct, const OutStream& os) {
 		bool ret = true;
 		switch(direct) {
-		case DIRECTION_TRACE:
-			ret = trace_.output(os);
-			break;
 		case DIRECTION_MSG:
 			ret = msgbox_.output(os);
+		case DIRECTION_TRACE:
+			ret = trace_.output(os);
 			break;
 		default:
 			ret = false;

@@ -259,6 +259,7 @@ namespace details {
 
 template<typename T>
 struct Operator {
+	// one
 	friend const T operator++(T& t, int) {
 		T tmp(t);
 		t.operator++();
@@ -275,7 +276,12 @@ struct Operator {
 	friend const T& operator+(const T& t) {
 		return t;
 	}
+	
+	friend bool operator!(const T& t) { 
+		return !t.i;
+	}
 
+	// 2
 	friend const T operator+(const T& lhs, const T& rhs) {
 		return T(lhs) += rhs;
 	}
@@ -311,7 +317,6 @@ struct Operator {
 	friend bool operator!=(const T& lhs, const T& rhs) {
 		return !(lhs == rhs);
 	}
-
 	
 	friend std::ostream& operator<<(std::ostream& os, const T& t) {
 		return os << t.i;

@@ -27,6 +27,9 @@
 #include "Clocker.h" // Clocker
 
 
+namespace timer {
+
+namespace details {
 
 template<class CharT>
 struct TimerStr {
@@ -40,6 +43,8 @@ struct TimerStr<wchar_t> {
 	std::basic_string<wchar_t> msg_;
 	TimerStr(const wchar_t* msg = 0) : msg_(msg ? msg : L"") {}
 };
+
+} // namespace details
 
 /** Simple timer.
 	- char traits type not complate(Only support char).
@@ -82,5 +87,6 @@ typedef Timer<FlatClocker<WinClock> > CountTimer;
 typedef Timer<FlatClocker<DefaultClock> > CountTimer;
 #endif // WIN_PLATFORM
 
+} // namespace timer.
 
 #endif // Timer_Head
